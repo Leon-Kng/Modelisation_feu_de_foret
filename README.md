@@ -10,9 +10,9 @@ Par la suite, nous chercherons à tester en direct les techniques à mettre en p
 On pourrait peut-être envisager, en fonction du niveau de maîtrise nécessaire, la création d’une interface graphique qui permettrait de modifier en direct des variables comme la vitesse du vent ou sa direction à l’aide de sliders.
 
 Nous aurons besoin des données suivantes pour établir un modèle réaliste :
-Une région contenant plusieurs configurations paysagères 
-La vitesse et la direction moyenne du vent dans cette région 
-La propagation du feu selon le paysage
+- Une région contenant plusieurs configurations paysagères 
+- La vitesse et la direction moyenne du vent dans cette région 
+- La propagation du feu selon le paysage
 
 Nous devrons transformer la zone étudiée sous la forme d’une matrice afin de pouvoir l’exploiter dans le programme. Pour cela nous avons besoin de trouver une méthode permettant de faire cette conversion.
 
