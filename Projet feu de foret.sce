@@ -49,28 +49,36 @@ grille_feu=grille
 ligne_random=ceil(100*rand())
 colonne_random=ceil(100*rand())
 grille_feu(ligne_random,colonne_random)=feu
-mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_random)
 
 // On détermine un nombre de temps pour la modélisation
-temps=2
+temps=50
+
 for t=1:temps
+    grille_temp=grille_feu
     for i=2:(nL-1)    // On commence à la ligne 2 et on arrête à l'avant dernière
         for j=2:(nC-1)    // On commence à la colonne 2 et on arrête à l'avant dernière 
-//            vecteur=grille_feu(i-1:i+1,j-1:j+1)           
-            mprintf("Test de la ligne %d, colonne %d \n", i,j)
+            // mprintf("Test de la ligne %d, colonne %d \n", i,j)
             // Règles : 
-            if grille_feu(i,j)==5
+            if grille_feu(i,j)==5   // Si feu alors on regarde toutes les cases autour
                 for y=(i-1):(i+1)
-                    for x=(-1):(j+1)
-                        print(grille_feu(y,x))
-                        //grille_feu(y,x)=5
+                    for x=(j-1):(j+1)
+                        if grille_feu(y,x)==33  // si forêt
+                            grille_temp(y,x)=5  // alors devient feu
+                        end
                     end
                 end
 
             end
         end
-    end   
+    end
+    Matplot(grille_temp)
+    grille_feu=grille_temp
+    disp(t)
 end
 
 // Affichage de la grille terminée
-Matplot(grille_feu)
+
+mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_random)
+
+
+// Pour faire qu'un arbre résiste plus qu'un autre au feu ou inversement qu'un arbre brule facilement, on fera bruler l'arbre après plusieurs générations colées à un feu 
