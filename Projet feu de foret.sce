@@ -12,7 +12,7 @@ nC=100
 
 for i=1:nL
     for j=i:nC
-        grille(i,j)=0
+        grille(i,j)=0 // i pour ligne et j pour colonne
     end
 end
 
@@ -50,6 +50,27 @@ ligne_random=ceil(100*rand())
 colonne_random=ceil(100*rand())
 grille_feu(ligne_random,colonne_random)=feu
 mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_random)
+
+// On détermine un nombre de temps pour la modélisation
+temps=2
+for t=1:temps
+    for i=2:(nL-1)    // On commence à la ligne 2 et on arrête à l'avant dernière
+        for j=2:(nC-1)    // On commence à la colonne 2 et on arrête à l'avant dernière 
+//            vecteur=grille_feu(i-1:i+1,j-1:j+1)           
+            mprintf("Test de la ligne %d, colonne %d \n", i,j)
+            // Règles : 
+            if grille_feu(i,j)==5
+                for y=(i-1):(i+1)
+                    for x=(-1):(j+1)
+                        print(grille_feu(y,x))
+                        //grille_feu(y,x)=5
+                    end
+                end
+
+            end
+        end
+    end   
+end
 
 // Affichage de la grille terminée
 Matplot(grille_feu)
