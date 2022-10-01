@@ -1,45 +1,27 @@
 clc // permet de rafraichir l'écran
 clear // permet d'effacer les anciennes variables
-// Création de la grille 
-
-// Nombre de lignes de la grille
+// Nombre de lignes et colonnes de la grille
 nL=100
-
-// Nombre de colonnes de la grille
 nC=100
 
-// Remplissage de la grille de départ avec des zéros
+// Remplissage de la grille de départ et grille du temps avec des zéros
 
 for i=1:nL
     for j=i:nC
         grille(i,j)=0 // i pour ligne et j pour colonne
+        grille_time(i,j)=0
     end
 end
 
 // Proportion des différents types de cases
 
-prop_esp1=0.125
-prop_esp2=0.125
-prop_esp3=0.125
-prop_esp4=0.125
-prop_eau=0.25
-prop_terre=0.25
+prop_esp1=0.125, prop_esp2=0.125, prop_esp3=0.125, prop_esp4=0.125, prop_eau=0.25, prop_terre=0.25
 
-// Association couleur aux entités
-eau=color(0,33,241)
-terre=color(187,105,0)
-feu=color(250,0,0)
-cendres=color(149,149,149)
-esp1=color(27,255,0)
-esp2=color(44,236,21)
-esp3=color(61,198,45)
-esp4=color(44,143,33)
+// Association couleurs aux entités
+eau=color(0,33,241), terre=color(187,105,0), feu=color(250,0,0), cendres=color(149,149,149), esp1=color(27,255,0), esp2=color(44,236,21), esp3=color(61,198,45), esp4=color(44,143,33)
 
 // Définition des indices/coeff de combustion de chaque espèce d'arbre
-combu_esp1=1    // indice correspond au nombre de temps avant que l'arbre brule
-combu_esp2=2    // plus l'indice est grand, plus l'arbre est résistant
-combu_esp3=3
-combu_esp4=4
+combu_esp1=1,combu_esp2=2, combu_esp3=3, combu_esp4=4
 
 // Génération de la matrice de base
 for i=1:nL
@@ -72,46 +54,50 @@ ligne_random=ceil(100*rand())
 colonne_random=ceil(100*rand())
 grille_feu(ligne_random,colonne_random)=feu
 
-// Création de la grille d'age du feu / grille du temps
-for i=1:nL
-    for j=i:nC
-        grille_age(i,j)=0
-    end
-end
-
 // On détermine un nombre de temps pour la modélisation
-temps=100
-viellissement=0.05
+temps=150
+viellissement=0.05  // pas de temps du vieillissement du feu
 
 for t=1:temps
     grille_temp=grille_feu
     for i=2:(nL-1)    // On commence à la ligne 2 et on arrête à l'avant dernière
         for j=2:(nC-1)    // On commence à la colonne 2 et on arrête à l'avant dernière 
             // Règles : 
-            if grille_feu(i,j)==feu   // Si feu alors on regarde toutes les cases autour
-                grille_age(i,j)=(grille_age(i,j)+viellissement)   // le feu prend de l'age
-                for y=(i-1):(i+1)
+            if grille_feu(i,j)==feu   // Si feu sur la case alors
+                grille_time(i,j)=(grille_time(i,j)+viellissement)   // le feu prend de l'age
+                for y=(i-1):(i+1)   // on regarde toutes les cases autour
                     for x=(j-1):(j+1)
-                        if grille_feu(y,x)==esp1 // si forêt
-                            grille_temp(y,x)=feu // alors feu
+                        if grille_feu(y,x)==esp1 // si arbre espèce 1
+                            if grille_time(y,x)<combu_esp1  // en contact du feu depuis moins de temps qu'il lui faut pour bruler
+                                grille_time(y,x)=grille_time(y,x)+1
+                            else grille_temp(y,x)=feu // alors feu
+                            end
                         end
                         if grille_feu(y,x)==esp2
-                            grille_temp(y,x)=feu
+                            if grille_time(y,x)<combu_esp2
+                                grille_time(y,x)=grille_time(y,x)+1
+                            else grille_temp(y,x)=feu
+                            end
                         end
                         if grille_feu(y,x)==esp3
-                            grille_temp(y,x)=feu
+                            if grille_time(y,x)<combu_esp3
+                                grille_time(y,x)=grille_time(y,x)+1
+                            else grille_temp(y,x)=feu
+                            end
                         end
                         if grille_feu(y,x)==esp4
-                            grille_temp(y,x)=feu
+                            if grille_time(y,x)<combu_esp4
+                                grille_time(y,x)=grille_time(y,x)+1
+                            else grille_temp(y,x)=feu
+                            end
                         end
                     end
                 end
+                if grille_time(i,j)>7    // Si feu atteint un certain "age" alors devient cednre car s'éteint
+                    grille_temp(i,j)=cendres
+                    grille_time(i,j)=grille_time(i,j)+viellissement
+                end
             end
-          if grille_age(i,j)>4
-              grille_temp(i,j)=cendres
-              grille_age(i,j)=grille_age(i,j)+viellissement
-            end
-
         end
     end
     Matplot(grille_temp)
