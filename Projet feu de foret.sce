@@ -9,7 +9,7 @@ occupsol=read("occup_asc.txt",286,508)
 
 for i=1:286     // nb de lignes
     for j=1:508     // nb de colonnes
-        grille_time(i,j)=0      // on crée une grille pour le temps par la même occasion
+        grille_time(i,j)=0      // on crée aussi une grille pour le temps
         if occupsol(i,j)==31
             grille(i,j)=foret_feuillus
         end
@@ -49,24 +49,25 @@ for i=1:286     // nb de lignes
     end
 end
 
-
-// Proportion des différents types de cases
-
-prop_esp1=0.2, prop_esp2=0.2, prop_esp3=0.2, prop_esp4=0.2, prop_eau=0.1, prop_terre=0.1
-
-// Définition des indices/coeff de combustion de chaque espèce d'arbre
-combu_esp1=1,combu_esp2=2, combu_esp3=3, combu_esp4=4
+// Définition des indices/coeff de combustion de chaque type de case, c'est la durée pendant laquelle la case peut être à côté du feu avant de prendre feu à son tour
+combu_pelouse=1, combu_foret_feuillus=7, combu_foret_coniferes=5, combu_landes_ligneuses=3, combu_prairie=2, combu_vignes=8
 
 // Début d'incencdie aléatoire 
 grille_feu=grille
-ligne_random=ceil(100*rand())
-colonne_random=ceil(100*rand())
+ligne_random=(ceil(1000*rand()))
+while ligne_random>286
+    ligne_random=(ceil(1000*rand()))
+end
+colonne_random=(ceil(1000*rand()))
+while colonne_random>508
+    colonne_random=(ceil(1000*rand()))
+end
 grille_feu(ligne_random,colonne_random)=feu
 
 // On détermine un nombre de temps pour la modélisation
 temps=500
 vieillissement_feu=0.05  // pas de temps du vieillissement du feu
-vitesse_combu=0.5   // pas de temps pour la durée que tiens un arbre à côté du feu avant de brûler
+vitesse_combu=1   // pas de temps pour la durée que tiens une case à côté du feu avant de brûler, plus il est petit, moins c'est rapide
 
 for t=1:temps
     grille_temp=grille_feu
@@ -77,26 +78,38 @@ for t=1:temps
                 grille_time(i,j)=(grille_time(i,j)+vieillissement_feu)   // le feu prend de l'age
                 for y=(i-1):(i+1)   // on regarde toutes les cases autour
                     for x=(j-1):(j+1)
-                        if grille_feu(y,x)==esp1 // si arbre espèce 1
-                            if grille_time(y,x)<combu_esp1  // en contact du feu depuis moins de temps qu'il lui faut pour bruler
+                        if grille_feu(y,x)==pelouse // si case = pelouse
+                            if grille_time(y,x)<combu_pelouse
                                 grille_time(y,x)=grille_time(y,x)+vitesse_combu
                             else grille_temp(y,x)=feu // alors feu
                             end
                         end
-                        if grille_feu(y,x)==esp2
-                            if grille_time(y,x)<combu_esp2
+                        if grille_feu(y,x)==foret_feuillus
+                            if grille_time(y,x)<combu_foret_feuillus
                                 grille_time(y,x)=grille_time(y,x)+vitesse_combu
                             else grille_temp(y,x)=feu
                             end
                         end
-                        if grille_feu(y,x)==esp3
-                            if grille_time(y,x)<combu_esp3
+                        if grille_feu(y,x)==foret_coniferes
+                            if grille_time(y,x)<combu_foret_coniferes
                                 grille_time(y,x)=grille_time(y,x)+vitesse_combu
                             else grille_temp(y,x)=feu
                             end
                         end
-                        if grille_feu(y,x)==esp4
-                            if grille_time(y,x)<combu_esp4
+                        if grille_feu(y,x)==landes_ligneuses
+                            if grille_time(y,x)<combu_landes_ligneuses
+                                grille_time(y,x)=grille_time(y,x)+vitesse_combu
+                            else grille_temp(y,x)=feu
+                            end
+                        end
+                        if grille_feu(y,x)==prairie
+                            if grille_time(y,x)<combu_prairie
+                                grille_time(y,x)=grille_time(y,x)+vitesse_combu
+                            else grille_temp(y,x)=feu
+                            end
+                        end
+                        if grille_feu(y,x)==vignes
+                            if grille_time(y,x)<combu_vignes
                                 grille_time(y,x)=grille_time(y,x)+vitesse_combu
                             else grille_temp(y,x)=feu
                             end
