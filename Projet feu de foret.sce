@@ -75,7 +75,6 @@ for t=1:temps
         for j=2:(508-1)    // On commence à la colonne 2 et on arrête à l'avant dernière 
             // Règles : 
             if grille_feu(i,j)==feu   // Si feu sur la case alors
-                grille_time(i,j)=(grille_time(i,j)+vieillissement_feu)   // le feu prend de l'age
                 for y=(i-1):(i+1)   // on regarde toutes les cases autour
                     for x=(j-1):(j+1)
                         if grille_feu(y,x)==pelouse // si case = pelouse
