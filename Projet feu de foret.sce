@@ -116,10 +116,6 @@ for t=1:temps
                         end
                     end
                 end
-                if grille_time(i,j)>25    // Si feu atteint un certain "age" alors devient cednre car s'éteint
-                    grille_temp(i,j)=cendres
-                    grille_time(i,j)=grille_time(i,j)+vieillissement_feu
-                end
             end
         end
     end
@@ -131,6 +127,3 @@ end
 // Affichage de la grille terminée
 
 mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_random)
-
-
-// Pour faire qu'un arbre résiste plus qu'un autre au feu ou inversement qu'un arbre brule facilement, on fera bruler l'arbre après plusieurs générations colées à un feu 
