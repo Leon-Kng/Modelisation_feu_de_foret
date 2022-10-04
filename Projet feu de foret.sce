@@ -134,5 +134,3 @@ mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_r
 
 
 // Pour faire qu'un arbre résiste plus qu'un autre au feu ou inversement qu'un arbre brule facilement, on fera bruler l'arbre après plusieurs générations colées à un feu 
-
-// Envoyer coordonnées GPS du coin en haut à gauche et en bas à droite à Kamel e il va noius donner un txt avec un code qui permet de le lire dans scilab 
