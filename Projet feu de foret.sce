@@ -1,54 +1,63 @@
 clc // permet de rafraichir l'écran
 clear // permet d'effacer les anciennes variables
-// Nombre de lignes et colonnes de la grille
-nL=100
-nC=100
 
-// Remplissage de la grille de départ et grille du temps avec des zéros
+// Association couleurs aux entités
+eau=color(0,128,255), feu=color(250,0,0), urbain_dense=color(160,160,160), urbain_diffu=color(192,192,192), pelouse=color(178,255,102), foret_feuillus=color(128,255,0), foret_coniferes=color(76,153,0), landes_ligneuses=color(102,204,0), zone_indus_commer=color(96,96,96), surf_minerale=color(166,105,0), plages_dunes=color(255,255,51), prairie=color(204,255,153), vignes=color(153,0,153)
 
-for i=1:nL
-    for j=i:nC
-        grille(i,j)=0 // i pour ligne et j pour colonne
-        grille_time(i,j)=0
+// Création de la grille et modification des couleurs
+occupsol=read("occup_asc.txt",286,508)
+
+for i=1:286     // nb de lignes
+    for j=1:508     // nb de colonnes
+        grille_time(i,j)=0      // on crée une grille pour le temps par la même occasion
+        if occupsol(i,j)==31
+            grille(i,j)=foret_feuillus
+        end
+        if occupsol(i,j)==32
+            grille(i,j)=foret_coniferes
+        end
+        if occupsol(i,j)==34
+            grille(i,j)=pelouse
+        end
+        if occupsol(i,j)==36
+            grille(i,j)=landes_ligneuses
+        end
+        if occupsol(i,j)==41
+            grille(i,j)=urbain_dense
+        end
+        if occupsol(i,j)==42
+            grille(i,j)=urbain_diffu
+        end
+        if occupsol(i,j)==43
+            grille(i,j)=zone_indus_commer
+        end
+        if occupsol(i,j)==45
+            grille(i,j)=surf_minerale
+        end
+        if occupsol(i,j)==46
+            grille(i,j)=plages_dunes
+        end
+        if occupsol(i,j)==51
+            grille(i,j)=eau
+        end
+        if occupsol(i,j)==211
+            grille(i,j)=prairie
+        end
+        if occupsol(i,j)==222
+            grille(i,j)=vignes
+        end
     end
 end
+
 
 // Proportion des différents types de cases
 
 prop_esp1=0.2, prop_esp2=0.2, prop_esp3=0.2, prop_esp4=0.2, prop_eau=0.1, prop_terre=0.1
 
-// Association couleurs aux entités
-eau=color(0,33,241), terre=color(187,105,0), feu=color(250,0,0), cendres=color(149,149,149), esp1=color(27,255,0), esp2=color(44,236,21), esp3=color(61,198,45), esp4=color(44,143,33)
-
 // Définition des indices/coeff de combustion de chaque espèce d'arbre
 combu_esp1=1,combu_esp2=2, combu_esp3=3, combu_esp4=4
 
-// Génération de la matrice de base
-for i=1:nL
-    for j=1:nC
-        r=rand()
-        if(r<prop_eau)
-            grille(i,j)=eau
-        end
-        if(r>(prop_eau))&(r<(prop_eau+prop_terre))
-            grille(i,j)=terre
-        end
-        if(r>(prop_eau+prop_terre))&(r<prop_eau+prop_terre+prop_esp1)
-            grille(i,j)=esp1
-        end
-        if(r>(prop_eau+prop_terre+prop_esp1))&(r<(prop_eau+prop_terre+prop_esp1+prop_esp2))
-            grille(i,j)=esp2
-        end
-        if(r>(prop_eau+prop_terre+prop_esp1+prop_esp2))&(r<(prop_eau+prop_terre+prop_esp1+prop_esp2+prop_esp3))
-            grille(i,j)=esp3
-        end
-        if(r>(1-prop_esp4))
-            grille(i,j)=esp4
-        end
-    end
-end
-
-// Début d'incendie aléatoire 
+// Début d'incencdie aléatoire 
 grille_feu=grille
 ligne_random=ceil(100*rand())
 colonne_random=ceil(100*rand())
@@ -61,8 +70,8 @@ vitesse_combu=0.5   // pas de temps pour la durée que tiens un arbre à côté 
 
 for t=1:temps
     grille_temp=grille_feu
-    for i=2:(nL-1)    // On commence à la ligne 2 et on arrête à l'avant dernière
-        for j=2:(nC-1)    // On commence à la colonne 2 et on arrête à l'avant dernière 
+    for i=2:(286-1)    // On commence à la ligne 2 et on arrête à l'avant dernière
+        for j=2:(508-1)    // On commence à la colonne 2 et on arrête à l'avant dernière 
             // Règles : 
             if grille_feu(i,j)==feu   // Si feu sur la case alors
                 grille_time(i,j)=(grille_time(i,j)+vieillissement_feu)   // le feu prend de l'age
