@@ -54,8 +54,8 @@ combu_pelouse=1, combu_foret_feuillus=7, combu_foret_coniferes=5, combu_landes_l
 
 // Début d'incencdie aléatoire 
 grille_feu=grille
-ligne_random=sample(1,2:285)
-colonne_random=sample(1,2:507)
+ligne_random=sample(1,20:280)
+colonne_random=sample(1,20:500)
 grille_feu(ligne_random,colonne_random)=feu
 mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_random)
 
@@ -63,13 +63,13 @@ mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_r
 // Paramètres de la modélisation 
 temps=250   // On détermine un nombre de temps pour la modélisation
 intensite_feu=2   // pas de temps pour la durée que tiens une case à côté du feu avant de brûler, plus il est petit, moins c'est rapide
-dir_vent="Nord" // Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest"
+dir_vent="Est" // Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest"
 
 for t=1:temps
     tic()
     grille_temp=grille_feu
-    for i=2:(286-1)    // On commence à la ligne 2 et on arrête à l'avant dernière
-        for j=2:(508-1)    // On commence à la colonne 2 et on arrête à l'avant dernière 
+    for i=3:(286-2)    // On commence à la ligne 2 et on arrête à l'avant dernière
+        for j=3:(508-2)    // On commence à la colonne 2 et on arrête à l'avant dernière 
             // Règles : 
             if grille_feu(i,j)==feu   // Si feu sur la case alors
                 grille_time(i,j)=grille_time(i,j)+1
