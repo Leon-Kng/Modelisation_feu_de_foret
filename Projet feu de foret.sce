@@ -59,8 +59,11 @@ colonne_random=sample(1,2:507)
 grille_feu(ligne_random,colonne_random)=feu
 mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_random)
 
-temps=500   // On détermine un nombre de temps pour la modélisation
-vitesse_combu=2   // pas de temps pour la durée que tiens une case à côté du feu avant de brûler, plus il est petit, moins c'est rapide
+
+// Paramètres de la modélisation 
+temps=250   // On détermine un nombre de temps pour la modélisation
+intensite_feu=2   // pas de temps pour la durée que tiens une case à côté du feu avant de brûler, plus il est petit, moins c'est rapide
+dir_vent=1 // 1 = Sud, 2 = Ouest, 3 = Nord, 4 = Est
 
 for t=1:temps
     tic()
@@ -77,37 +80,37 @@ for t=1:temps
                         for x=(j-1):(j+1)
                             if grille_feu(y,x)==pelouse // si case = pelouse
                                 if grille_time(y,x)<combu_pelouse
-                                    grille_time(y,x)=grille_time(y,x)+vitesse_combu
+                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
                                 else grille_temp(y,x)=feu // alors feu
                                 end
                             end
                             if grille_feu(y,x)==foret_feuillus
                                 if grille_time(y,x)<combu_foret_feuillus
-                                    grille_time(y,x)=grille_time(y,x)+vitesse_combu
+                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
                                 else grille_temp(y,x)=feu
                                 end
                             end
                             if grille_feu(y,x)==foret_coniferes
                                 if grille_time(y,x)<combu_foret_coniferes
-                                    grille_time(y,x)=grille_time(y,x)+vitesse_combu
+                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
                                 else grille_temp(y,x)=feu
                                 end
                             end
                             if grille_feu(y,x)==landes_ligneuses
                                 if grille_time(y,x)<combu_landes_ligneuses
-                                    grille_time(y,x)=grille_time(y,x)+vitesse_combu
+                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
                                 else grille_temp(y,x)=feu
                                 end
                             end
                             if grille_feu(y,x)==prairie
                                 if grille_time(y,x)<combu_prairie
-                                    grille_time(y,x)=grille_time(y,x)+vitesse_combu
+                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
                                 else grille_temp(y,x)=feu
                                 end
                             end
                             if grille_feu(y,x)==vignes
                                 if grille_time(y,x)<combu_vignes
-                                    grille_time(y,x)=grille_time(y,x)+vitesse_combu
+                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
                                 else grille_temp(y,x)=feu
                                 end
                             end
