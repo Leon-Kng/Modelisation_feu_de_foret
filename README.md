@@ -1,5 +1,7 @@
-à faire :
-- optimiser le code en évitant d'observer toutes les autour d'une case de feu une fois que l'on sait qu'il n'y a que du feu
-- vent : vitesse et direction (augmente la portée du feu)
+est ce qu'on fait varier la vitesse du vent ? Si oui, une vitesse plus forte fait augmenter la vitesse de combustion ou au contraire la ralenti ?
+
+
+à ajouter :
+- altitude
 - Pompiers
 - Systèmes anti-feu
