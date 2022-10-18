@@ -49,8 +49,8 @@ for i=1:286     // nb de lignes
     end
 end
 
-// Définition des indices/coeff de combustion de chaque type de case, c'est la durée pendant laquelle la case peut être à côté du feu avant de prendre feu à son tour
-combu_pelouse=1, combu_foret_feuillus=7, combu_foret_coniferes=5, combu_landes_ligneuses=3, combu_prairie=2, combu_vignes=8
+// Définition des probabilités de combustion de chaque type de case, en %
+combu_pelouse=65, combu_foret_feuillus=47,5, combu_foret_coniferes=55, combu_landes_ligneuses=85, combu_prairie=75, combu_vignes=15
 
 // Début d'incencdie aléatoire 
 grille_feu=grille
@@ -62,9 +62,11 @@ mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_r
 
 // Paramètres de la modélisation 
 temps=250   // On détermine un nombre de temps pour la modélisation
-intensite_feu=2   // pas de temps pour la durée que tiens une case à côté du feu avant de brûler, plus il est petit, moins c'est rapide
-dir_vent="Est" // Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest"
+dir_vent="Sud" // Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest"
+humidite=70 // en %
+facthumid=1-(humidite/100)  // facteur d'humidité
 
+// Début de la modélisation
 for t=1:temps
     tic()
     grille_temp=grille_feu
@@ -80,165 +82,39 @@ for t=1:temps
                     for y=(i-2):(i)
                         for x=(j-1):(j+1)
                             if grille_feu(y,x)==pelouse // si case = pelouse
-                                if grille_time(y,x)<combu_pelouse
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu // alors feu
+                                if sample(1,0:100)<(combu_pelouse*facthumid)
+                                    grille_temp(y,x)=feu
+                                else
                                 end
                             end
                             if grille_feu(y,x)==foret_feuillus
-                                if grille_time(y,x)<combu_foret_feuillus
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
+                                if sample(1,0:100)<(combu_foret_feuillus*facthumid)
+                                    grille_temp(y,x)=feu
+                                else
                                 end
                             end
                             if grille_feu(y,x)==foret_coniferes
-                                if grille_time(y,x)<combu_foret_coniferes
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
+                                if sample(1,0:100)<(combu_foret_coniferes*facthumid)
+                                    grille_temp(y,x)=feu
+                                else
                                 end
                             end
                             if grille_feu(y,x)==landes_ligneuses
-                                if grille_time(y,x)<combu_landes_ligneuses
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
+                                if sample(1,0:100)<(combu_landes_ligneuses*facthumid)
+                                    grille_temp(y,x)=feu
+                                else
                                 end
                             end
                             if grille_feu(y,x)==prairie
-                                if grille_time(y,x)<combu_prairie
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
+                                if sample(1,0:100)<(combu_prairie*facthumid)
+                                    grille_temp(y,x)=feu
+                                else
                                 end
                             end
                             if grille_feu(y,x)==vignes
-                                if grille_time(y,x)<combu_vignes
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                        end
-                    end
-                end
-                if dir_vent=="Nord"
-                    for y=(i):(i+2)
-                        for x=(j-1):(j+1)
-                            if grille_feu(y,x)==pelouse // si case = pelouse
-                                if grille_time(y,x)<combu_pelouse
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu // alors feu
-                                end
-                            end
-                            if grille_feu(y,x)==foret_feuillus
-                                if grille_time(y,x)<combu_foret_feuillus
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==foret_coniferes
-                                if grille_time(y,x)<combu_foret_coniferes
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==landes_ligneuses
-                                if grille_time(y,x)<combu_landes_ligneuses
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==prairie
-                                if grille_time(y,x)<combu_prairie
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==vignes
-                                if grille_time(y,x)<combu_vignes
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                        end
-                    end
-                end
-                if dir_vent=="Est"
-                    for y=(i-1):(i+1)
-                        for x=(j-2):(j)
-                            if grille_feu(y,x)==pelouse // si case = pelouse
-                                if grille_time(y,x)<combu_pelouse
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu // alors feu
-                                end
-                            end
-                            if grille_feu(y,x)==foret_feuillus
-                                if grille_time(y,x)<combu_foret_feuillus
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==foret_coniferes
-                                if grille_time(y,x)<combu_foret_coniferes
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==landes_ligneuses
-                                if grille_time(y,x)<combu_landes_ligneuses
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==prairie
-                                if grille_time(y,x)<combu_prairie
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==vignes
-                                if grille_time(y,x)<combu_vignes
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                        end
-                    end
-                end
-                if dir_vent=="Ouest"
-                    for y=(i-1):(i+1)
-                        for x=(j):(j+2)
-                            if grille_feu(y,x)==pelouse // si case = pelouse
-                                if grille_time(y,x)<combu_pelouse
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu // alors feu
-                                end
-                            end
-                            if grille_feu(y,x)==foret_feuillus
-                                if grille_time(y,x)<combu_foret_feuillus
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==foret_coniferes
-                                if grille_time(y,x)<combu_foret_coniferes
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==landes_ligneuses
-                                if grille_time(y,x)<combu_landes_ligneuses
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==prairie
-                                if grille_time(y,x)<combu_prairie
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
-                                end
-                            end
-                            if grille_feu(y,x)==vignes
-                                if grille_time(y,x)<combu_vignes
-                                    grille_time(y,x)=grille_time(y,x)+intensite_feu
-                                else grille_temp(y,x)=feu
+                                if sample(1,0:100)<(combu_vignes*facthumid)
+                                    grille_temp(y,x)=feu
+                                else
                                 end
                             end
                         end
