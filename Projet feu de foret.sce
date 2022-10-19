@@ -4,8 +4,14 @@ clear // permet d'effacer les anciennes variables
 // Association couleurs aux entités
 eau=color(0,128,255), feu=color(250,0,0), urbain_dense=color(160,160,160), urbain_diffu=color(192,192,192), pelouse=color(178,255,102), foret_feuillus=color(128,255,0), foret_coniferes=color(76,153,0), landes_ligneuses=color(102,204,0), zone_indus_commer=color(96,96,96), surf_minerale=color(166,105,0), plages_dunes=color(255,255,51), prairie=color(204,255,153), vignes=color(153,0,153),vieux_feu=color(190,0,0)
 
-// Création de la grille et modification des couleurs
+// Création des grilles et modification des couleurs
 occupsol=read("occup_asc.txt",286,508)
+
+for i=1:3
+    for j=1:3
+        grille_fact_vent=0
+    end
+end
 
 for i=1:286     // nb de lignes
     for j=1:508     // nb de colonnes
@@ -57,16 +63,69 @@ grille_feu=grille
 ligne_random=sample(1,20:280)
 colonne_random=sample(1,20:500)
 grille_feu(ligne_random,colonne_random)=feu
-mprintf("Le feu a commencé à la ligne %d, colonne %d", ligne_random, colonne_random)
+mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_random, colonne_random)
 
 
 // Paramètres de la modélisation 
 temps=250   // On détermine un nombre de temps pour la modélisation
-dir_vent="Sud" // Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest"
-humidite=70 // en %
-facthumid=1-(humidite/100)  // facteur d'humidité
+dir_vent="Nord" // Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest"
+humidite=20 // en %
+fact_humid=1-(humidite/100)  // facteur d'humidité
+vent_pos=1.5
+vent_neg=0.01
+vent_neut=0.8
 
-// Début de la modélisation
+
+// Grilles du vent
+if dir_vent=="Ouest"
+    for a=1:3
+        grille_fact_vent(a,1)=vent_neg // colonne 1
+    end
+    for a=1:3
+        grille_fact_vent(a,2)=vent_neut // colonne 2
+    end
+    for a=1:3
+        grille_fact_vent(a,3)=vent_pos // colonne 3
+    end
+end
+
+if dir_vent=="Est"
+    for a=1:3
+        grille_fact_vent(a,1)=vent_pos
+    end
+    for a=1:3
+        grille_fact_vent(a,2)=vent_neut
+    end
+    for a=1:3
+        grille_fact_vent(a,3)=vent_neg
+    end
+end
+
+if dir_vent=="Sud"
+    for a=1:3
+        grille_fact_vent(1,a)=vent_pos  // ligne 1
+    end
+    for a=1:3
+        grille_fact_vent(2,a)=vent_neut // ligne 2
+    end
+    for a=1:3
+        grille_fact_vent(3,a)=vent_neg  // ligne3
+    end
+end
+
+if dir_vent=="Nord"
+    for a=1:3
+        grille_fact_vent(1,a)=vent_neg  // ligne 1
+    end
+    for a=1:3
+        grille_fact_vent(2,a)=vent_neut // ligne 2
+    end
+    for a=1:3
+        grille_fact_vent(3,a)=vent_pos  // ligne3
+    end
+end
+
+//Début de la modélisation
 for t=1:temps
     tic()
     grille_temp=grille_feu
@@ -75,51 +134,51 @@ for t=1:temps
             // Règles : 
             if grille_feu(i,j)==feu   // Si feu sur la case alors
                 grille_time(i,j)=grille_time(i,j)+1
-                if grille_time(i,j)==25     // large pour être sûr qu'il a eu le temps de tout bruler autour
+                if grille_time(i,j)==50     // large pour être sûr qu'il a eu le temps de tout bruler autour
                     grille_temp(i,j)=vieux_feu
-                else
-                if dir_vent=="Sud"
-                    for y=(i-2):(i)
+                else   
+                    for y=(i-1):(i+1)
+                        a=(y-i+2)
                         for x=(j-1):(j+1)
+                            b=(x-j+2)
                             if grille_feu(y,x)==pelouse // si case = pelouse
-                                if sample(1,0:100)<(combu_pelouse*facthumid)
+                                if sample(1,0:100)<(combu_pelouse*fact_humid*grille_fact_vent(a,b))
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==foret_feuillus
-                                if sample(1,0:100)<(combu_foret_feuillus*facthumid)
+                                if sample(1,0:100)<(combu_foret_feuillus*fact_humid*grille_fact_vent(a,b))
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==foret_coniferes
-                                if sample(1,0:100)<(combu_foret_coniferes*facthumid)
+                                if sample(1,0:100)<(combu_foret_coniferes*fact_humid*grille_fact_vent(a,b))
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==landes_ligneuses
-                                if sample(1,0:100)<(combu_landes_ligneuses*facthumid)
+                                if sample(1,0:100)<(combu_landes_ligneuses*fact_humid*grille_fact_vent(a,b))
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==prairie
-                                if sample(1,0:100)<(combu_prairie*facthumid)
+                                if sample(1,0:100)<(combu_prairie*fact_humid*grille_fact_vent(a,b))
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==vignes
-                                if sample(1,0:100)<(combu_vignes*facthumid)
+                                if sample(1,0:100)<(combu_vignes*fact_humid*grille_fact_vent(a,b))
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                         end
                     end
-                end
                 end
             end
         end
