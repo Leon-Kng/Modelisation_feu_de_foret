@@ -2,7 +2,7 @@ clc // permet de rafraichir l'écran
 clear // permet d'effacer les anciennes variables
 
 // Association couleurs aux entités
-eau=color(0,128,255), feu=color(250,0,0), urbain_dense=color(160,160,160), urbain_diffu=color(192,192,192), pelouse=color(178,255,102), foret_feuillus=color(128,255,0), foret_coniferes=color(76,153,0), landes_ligneuses=color(102,204,0), zone_indus_commer=color(96,96,96), surf_minerale=color(166,105,0), plages_dunes=color(255,255,51), prairie=color(204,255,153), vignes=color(153,0,153),vieux_feu=color(190,0,0)
+eau=color(0,128,255), feu=color(250,0,0), urbain_dense=color(160,160,160), urbain_diffu=color(192,192,192), pelouse=color(178,255,102), foret_feuillus=color(128,255,0), foret_coniferes=color(76,153,0), landes_ligneuses=color(102,204,0), zone_indus_commer=color(96,96,96), surf_minerale=color(166,105,0), plages_dunes=color(255,255,51), prairie=color(204,255,153), vignes=color(153,0,153),vieux_feu=color(190,0,0), brique=color(100,100,100)
 
 // Définition des probabilités de combustion de chaque type de case, en %
 combu_pelouse=50, combu_foret_feuillus=50, combu_foret_coniferes=60, combu_landes_ligneuses=75, combu_prairie=65, combu_vignes=10
@@ -66,6 +66,122 @@ for i=1:286     // nb de lignes
         end
     end
 end
+
+////// Création de murs anti-feux aléatoirement /////
+mur="NON"
+if mur=="OUI"
+    nb_murs_max=15,nb_murs=0
+    
+    while nb_murs<nb_murs_max
+        nb_murs=nb_murs+1
+        x=0,time=100,ligne=sample(1,2:285)
+        colonne=sample(1,2:507),direction=sample(1,1:8)
+        while x<time
+            x=x+1
+            if ligne>1 & ligne<285 & colonne>1 & colonne<507
+                if direction==1
+                    random=sample(1,2:4)
+                end
+                if direction==2
+                    random=sample(1,6:8)
+                end
+                if direction==3
+                    random=sample(1,4:6)
+                end
+                if direction==4
+                    possibilites=[1,2,8]
+                    random=sample(1,possibilites)
+                end
+                if direction==5
+                    random=sample(1,1:3)
+                end
+                if direction==6
+                    random=sample(1,3:5)
+                end
+                if direction==7
+                    random=sample(1,5:7)
+                end
+                if direction==8
+                    possibilites=[1,7,8]
+                    random=sample(1,possibilites)
+                end
+                    
+                    
+                if random==1
+                    ligne2=(ligne-1)
+                    colonne2=(colonne-1)
+                    grille(ligne2,colonne2)=brique
+                    grille((ligne2+1),colonne2)=brique
+                    grille((ligne2+2),colonne2)=brique
+                end
+                if random==2
+                    ligne2=(ligne-1)
+                    colonne2=(colonne)
+                    grille(ligne2,colonne2)=brique
+                    grille(ligne2,(colonne2+1))=brique
+                    grille(ligne2,(colonne2+2))=brique
+                end
+                if random==3
+                    ligne2=(ligne-1)
+                    colonne2=(colonne+1)
+                    Grille(ligne2,colonne2)=brique
+                    grille((ligne2+1),colonne2)=brique
+                    grille((ligne2+2),colonne2)=brique
+                end
+                if random==4
+                    ligne2=ligne
+                    colonne2=(colonne+1)
+                    grille(ligne2,colonne2)=brique
+                    grille((ligne2+1),colonne2)=brique
+                end
+                if random==5
+                    ligne2=(ligne+1)
+                    colonne2=(colonne+1)
+                    grille(ligne2,colonne2)=brique
+                    grille((ligne2+1),colonne2)=brique
+                end
+                if random==6
+                    ligne2=(ligne+1)
+                    colonne2=colonne
+                    Grille(ligne2,colonne2)=brique
+                    grille(ligne2,(colonne2+1))=brique
+                    grille(ligne2,(colonne2+2))=brique
+                end
+                if random==7
+                    ligne2=ligne
+                    colonne2=(colonne-1)
+                    grille(ligne2,colonne2)=brique
+                    grille(ligne2+1,colonne2)=brique
+                    grille(ligne2+2,colonne2)=brique
+                end
+                if random==8
+                    ligne2=(ligne+1)
+                    colonne2=(colonne-1)
+                    grille(ligne2,colonne2)=brique
+                    grille((ligne2+1),colonne2)=brique
+                    rille((ligne2+2),colonne2)=brique
+                end
+            end
+            ligne=ligne2
+            colonne=colonne2
+            
+            // Pour éviter que la brique ne sorte de la matrice :
+            if ligne<=1
+                x=time
+            end
+            if ligne>=285
+                x=time
+            end
+            if colonne<=1
+                x=time
+            end
+            if colonne>=507
+                x=time
+            end
+        end
+    end
+end
+////////////
 
 // Début d'incencdie aléatoire 
 grille_feu=grille
@@ -152,11 +268,9 @@ for t=1:temps
                         for x=(j-1):(j+1)
                             b=(x-j+2)
                             fact_intensite=(1+(sum(grille_intensite(y-1:y+1,x-1:x+1)))/1800)
-                            disp(fact_intensite)
                             if grille_feu(y,x)==pelouse // si case = pelouse
                                 if sample(1,0:100)<(combu_pelouse*fact_humid*grille_fact_vent(a,b)*fact_intensite)
                                     grille_temp(y,x)=feu
-                                    disp(grille_fact_vent(a,b))
                                 else
                                 end
                             end
