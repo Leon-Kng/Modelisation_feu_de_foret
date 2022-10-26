@@ -151,39 +151,41 @@ for t=1:temps
                         a=(y-i+2)
                         for x=(j-1):(j+1)
                             b=(x-j+2)
+                            fact_intensite=(1+(sum(grille_intensite(y-1:y+1,x-1:x+1)))/1800)
+                            disp(fact_intensite)
                             if grille_feu(y,x)==pelouse // si case = pelouse
-                                if sample(1,0:100)<(combu_pelouse*fact_humid*grille_fact_vent(a,b)*((sum(grille_intensite(y-1:y+1,x-1:x+1)))/90000))
+                                if sample(1,0:100)<(combu_pelouse*fact_humid*grille_fact_vent(a,b)*fact_intensite)
                                     grille_temp(y,x)=feu
                                     disp(grille_fact_vent(a,b))
                                 else
                                 end
                             end
                             if grille_feu(y,x)==foret_feuillus
-                                if sample(1,0:100)<(combu_foret_feuillus*fact_humid*grille_fact_vent(a,b)*((sum(grille_intensite(y-1:y+1,x-1:x+1)))/90000))
+                                if sample(1,0:100)<(combu_foret_feuillus*fact_humid*grille_fact_vent(a,b)*fact_intensite)
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==foret_coniferes
-                                if sample(1,0:100)<(combu_foret_coniferes*fact_humid*grille_fact_vent(a,b)*((sum(grille_intensite(y-1:y+1,x-1:x+1)))/90000))
+                                if sample(1,0:100)<(combu_foret_coniferes*fact_humid*grille_fact_vent(a,b)*fact_intensite)
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==landes_ligneuses
-                                if sample(1,0:100)<(combu_landes_ligneuses*fact_humid*grille_fact_vent(a,b)*((sum(grille_intensite(y-1:y+1,x-1:x+1)))/90000))
+                                if sample(1,0:100)<(combu_landes_ligneuses*fact_humid*grille_fact_vent(a,b)*fact_intensite)
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==prairie
-                                if sample(1,0:100)<(combu_prairie*fact_humid*grille_fact_vent(a,b)*((sum(grille_intensite(y-1:y+1,x-1:x+1)))/9))
+                                if sample(1,0:100)<(combu_prairie*fact_humid*grille_fact_vent(a,b)*fact_intensite)
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==vignes
-                                if sample(1,0:100)<(combu_vignes*fact_humid*grille_fact_vent(a,b)*((sum(grille_intensite(y-1:y+1,x-1:x+1)))/90000))
+                                if sample(1,0:100)<(combu_vignes*fact_humid*grille_fact_vent(a,b)*fact_intensite)
                                     grille_temp(y,x)=feu
                                 else
                                 end
