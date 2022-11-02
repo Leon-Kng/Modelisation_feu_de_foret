@@ -1,15 +1,12 @@
+![image](https://user-images.githubusercontent.com/92827382/199603527-ec3ad948-edf8-4d35-9f91-d421a0c69bb0.png)
+
+
 En bref : une proba de combustion pour chaque type de parcelle qui va être impactée par le vent, l'altitude, l'humidité et l'intensité des cases voisines
 
-- Remplacer coeff de combustion par proba de combustion
-- Ajouter une intensité de combustion pour chaque type de pixel
-- Faire un facteur multiplicateur de l'intensité et la proba de combu pour le vent, l'altitude, l'humidité
-- Faire que l'intensité d'un pixel modifie la proba 
-- Faire des scénario où toute la zone est humide ou toute la zone est très sèche
+- Ajouter facteur de multiplication de l'altitude
+- Ajouter un système qui calcule la vitesse du feu
+- Créear une fonction ??
 - Faire changer de direction le vent au cours de la modélisation
-- Ajouter pompiers et/ou systèmes anti-feux
+- Faire des scénario où toute la zone est humide ou toute la zone est très sèche et les comparer
 
-(Proba qu'un pixel prenne feu (lié au type de pixel)
-Intensité du feu en fonction du type de pixel
-Vent augmente beaucoup la proba du feu, sans vent il est très lent -> vent fait augmenter la proba de prendre feu et la vitesse de combustion sur toute la zone)
-
-Faire diminuer fortement la proba des pixels contre le vent et un peu moins de gauche à droite et beaucoup avec le vent
+On a préféré avoir une modélisation qui donne un résultat "réaliste" que d'ajouter des pompiers qui auraient potentiellement été non réalistes 
