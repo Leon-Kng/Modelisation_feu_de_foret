@@ -12,6 +12,7 @@ int_pelouse=20, int_foret_feuillus=75, int_foret_coniferes=90, int_landes_ligneu
 
 // Création des grilles et modification des couleurs
 occupsol=read("occup_asc.txt",286,508)
+grille_alt=read('alt_asc.txt',286,508)
 
 for i=1:3
     for j=1:3
@@ -76,7 +77,7 @@ mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_random, colonn
 
 
 // Paramètres de la modélisation 
-temps=250   // On détermine un nombre de temps pour la modélisation
+temps=200   // On détermine un nombre de temps pour la modélisation
 dir_vent="Est" // Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest"
 humidite=70 // en %
 fact_humid=1-(humidite/100)  // facteur d'humidité
@@ -136,6 +137,14 @@ if dir_vent=="Nord"
     end
 end
 
+if dir_vent=="Pas_de_vent"
+    for a=1:3
+        for b=1:3
+            grille_fact_vent(a,b)=1
+        end
+    end
+end
+
 //Début de la modélisation
 for t=1:temps
     tic()
@@ -149,42 +158,48 @@ for t=1:temps
                     grille_temp(i,j)=vieux_feu
                 else
                     for y=(i-1):(i+1)
-                        a=(y-i+2)
+                        a=(y-i+2)   // pour explorer la grille du vent
                         for x=(j-1):(j+1)
                             b=(x-j+2)
                             fact_intensite=(1+(sum(grille_intensite(y-1:y+1,x-1:x+1)))/1800)
+                            delta_alt=(grille_alt(y,x))-(grille_alt(i,j))
+                            if delta_alt<=0
+                                fact_alt=1-delta_alt*0.01
+                            else
+                                fact_alt=delta_alt*0.01
+                            end
                             if grille_feu(y,x)==pelouse // si case = pelouse
-                                if sample(1,0:100)<(combu_pelouse*fact_humid*grille_fact_vent(a,b)*fact_intensite)
+                                if sample(1,0:100)<(combu_pelouse*fact_humid*grille_fact_vent(a,b)*fact_intensite*fact_alt)
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==foret_feuillus
-                                if sample(1,0:100)<(combu_foret_feuillus*fact_humid*grille_fact_vent(a,b)*fact_intensite)
+                                if sample(1,0:100)<(combu_foret_feuillus*fact_humid*grille_fact_vent(a,b)*fact_intensite*fact_alt)
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==foret_coniferes
-                                if sample(1,0:100)<(combu_foret_coniferes*fact_humid*grille_fact_vent(a,b)*fact_intensite)
+                                if sample(1,0:100)<(combu_foret_coniferes*fact_humid*grille_fact_vent(a,b)*fact_intensite*fact_alt)
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==landes_ligneuses
-                                if sample(1,0:100)<(combu_landes_ligneuses*fact_humid*grille_fact_vent(a,b)*fact_intensite)
+                                if sample(1,0:100)<(combu_landes_ligneuses*fact_humid*grille_fact_vent(a,b)*fact_intensite*fact_alt)
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==prairie
-                                if sample(1,0:100)<(combu_prairie*fact_humid*grille_fact_vent(a,b)*fact_intensite)
+                                if sample(1,0:100)<(combu_prairie*fact_humid*grille_fact_vent(a,b)*fact_intensite*fact_alt)
                                     grille_temp(y,x)=feu
                                 else
                                 end
                             end
                             if grille_feu(y,x)==vignes
-                                if sample(1,0:100)<(combu_vignes*fact_humid*grille_fact_vent(a,b)*fact_intensite)
+                                if sample(1,0:100)<(combu_vignes*fact_humid*grille_fact_vent(a,b)*fact_intensite*fact_alt)
                                     grille_temp(y,x)=feu
                                 else
                                 end
@@ -201,3 +216,7 @@ for t=1:temps
     temps=toc()
     disp(temps)
 end
+
+grille_feu(ligne_random,colonne_random)=color(0,0,0)
+Matplot(grille_feu)
+mprintf("Le feu a commencé à la ligne %d, colonne %d. \n Origine représentée par une case noire.", ligne_random, colonne_random)
