@@ -1,4 +1,4 @@
-![image](https://user-images.githubusercontent.com/92827382/199603527-ec3ad948-edf8-4d35-9f91-d421a0c69bb0.png)
+![image](https://user-images.githubusercontent.com/92827382/199605937-7257bc75-9346-4843-9913-4ddb1235babe.png)
 
 
 En bref : une proba de combustion pour chaque type de parcelle qui va être impactée par le vent, l'altitude, l'humidité et l'intensité des cases voisines
