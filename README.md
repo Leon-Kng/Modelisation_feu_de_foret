@@ -2,6 +2,10 @@
 
 ![image](https://user-images.githubusercontent.com/92827382/202258412-4162d9cf-3c47-4ca9-9695-1b0af9f15dae.png)
 
+<h3> Carte avec les différents couverts végétaux :</h3>
+
+![image](https://user-images.githubusercontent.com/92827382/202259317-9d922d98-4919-4bdc-b853-e56450142215.png)
+
 
 <h3> Carte de l'altitude :</h3>
 
