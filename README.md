@@ -3,12 +3,13 @@
 
 Concept de base: une proba de combustion pour chaque type de parcelle qui va être impactée par le vent, l'altitude, l'humidité et l'intensité des cases voisines
 
+<h3> A faire : </h3>
 - Ajouter un système qui calcule la vitesse du feu (compter le nb de pixel qui a brûlé au total ou en plus chaque génération, stocker la valeur dans un vecteur et utiliser cela pour avoir une surface / temps) 
 - Formuler la formule qui permet de donner la proba qu'une case prenne feu
 - Faire changer de direction le vent au cours de la modélisation
 - Faire des scénario où toute la zone est humide ou toute la zone est très sèche et les comparer
 
-Rapport : 
+<h3>Rapport : </h3> 
 - On a préféré avoir une modélisation qui donne un résultat "réaliste" que d'ajouter des pompiers qui auraient potentiellement été non réalistes 
 - Faire une formulation du modèle
 - Faire une analyse de sensibilité du modèle (voir CM4 Girondot)
