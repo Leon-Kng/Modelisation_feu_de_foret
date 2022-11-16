@@ -1,3 +1,8 @@
+<h3>Zone étudiée :</h3>
+
+![image](https://user-images.githubusercontent.com/92827382/202258412-4162d9cf-3c47-4ca9-9695-1b0af9f15dae.png)
+
+
 <h3> Carte de l'altitude :</h3>
 
 ![image](https://user-images.githubusercontent.com/92827382/199605937-7257bc75-9346-4843-9913-4ddb1235babe.png)
