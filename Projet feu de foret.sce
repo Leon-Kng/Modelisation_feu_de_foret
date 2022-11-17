@@ -70,14 +70,14 @@ end
 
 // Début d'incencdie aléatoire 
 grille_feu=grille
-ligne_random=sample(1,20:280)
-colonne_random=sample(1,20:500)
-grille_feu(ligne_random,colonne_random)=feu
-mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_random, colonne_random)
+ligne_feu=143//sample(1,20:280)
+colonne_feu=254//sample(1,20:500)
+grille_feu(ligne_feu,colonne_feu)=feu
+mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_feu, colonne_feu)
 
 
 // Paramètres de la modélisation 
-temps=200   // On détermine un nombre de temps pour la modélisation
+temps=50   // On détermine un nombre de temps pour la modélisation
 dir_vent="Est" // Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest"
 humidite=70 // en %
 fact_humid=1-(humidite/100)  // facteur d'humidité
@@ -86,6 +86,9 @@ fact_vent=1+(vitesse_vent/100)
 vent_pos=1.5*fact_vent
 vent_neg=0.01*fact_vent
 vent_neut=0.8*fact_vent
+nb_cases_feu=0
+
+filename = fullfile(pwd(), "test.csv")  // où on stocke les matrices
 
 // Grilles du vent
 if dir_vent=="Ouest"
@@ -204,19 +207,153 @@ for t=1:temps
                                 else
                                 end
                             end
+
                         end
                     end
                 end
             end
         end
     end
+    //fprintfMat(filename, grille_temp)
     Matplot(grille_temp)    // Affichage de la grille
     grille_feu=grille_temp
     disp(t)
-    temps=toc()
-    disp(temps)
+    temps_calc=toc()
+    disp(temps_calc)
 end
 
-grille_feu(ligne_random,colonne_random)=color(0,0,0)
-Matplot(grille_feu)
-mprintf("Le feu a commencé à la ligne %d, colonne %d. \n Origine représentée par une case noire.", ligne_random, colonne_random)
+grille_feu(ligne_feu,colonne_feu)=color(0,0,0)    // origine du feu d'une autre couleur
+//Matplot(grille_feu)
+mprintf("Le feu a commencé à la ligne %d, colonne %d. \n Origine représentée par une case noire.\n", ligne_feu, colonne_feu)
+
+
+///////// CALCUL DE LA VITESSE MOYENNE DU FEU DANS 4 DIRECTIONS ////////
+
+// On cherche la bordure du feu pour chaque point cardinal
+// Est
+i=ligne_feu
+j=colonne_feu
+j=j+1   // on avance d'une case pour éviter la case noire
+while grille_feu(i,j)==vieux_feu
+    j=j+1
+    while grille_feu(i,j)==feu
+        j=j+1
+    end
+end
+distance_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20 // calcul de la norme du vecteur origine-point cardinal pour avoir la distance parcourue par le feu, on multiplie par 20 car c'est la taille d'une case en mètres
+vitesse_feu_est=distance_est/temps  // calcul de la vitesse vers cette direction
+mat_vitesses(2,3)=vitesse_feu_est
+
+// Ouest
+i=ligne_feu
+j=colonne_feu
+j=j-1
+while grille_feu(i,j)==vieux_feu
+    j=j-1
+    while grille_feu(i,j)==feu
+        j=j-1
+    end
+end
+distance_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+vitesse_feu_ouest=distance_ouest/temps
+mat_vitesses(2,1)=vitesse_feu_ouest
+
+// Sud
+i=ligne_feu
+j=colonne_feu
+i=i+1
+while grille_feu(i,j)==vieux_feu
+    i=i+1
+    while grille_feu(i,j)==feu
+        i=i+1
+    end
+end
+distance_sud=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+vitesse_feu_sud=distance_sud/temps
+mat_vitesses(3,2)=vitesse_feu_sud
+
+// Nord
+i=ligne_feu
+j=colonne_feu
+i=i-1
+while grille_feu(i,j)==vieux_feu
+    i=i-1
+    while grille_feu(i,j)==feu
+        i=i-1
+    end
+end
+distance_nord=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+vitesse_feu_nord=distance_nord/temps
+mat_vitesses(1,2)=vitesse_feu_nord
+
+// Nord-Ouest
+i=ligne_feu
+j=colonne_feu
+i=i-1
+j=j-1
+while grille_feu(i,j)==vieux_feu
+    i=i-1
+    j=j-1
+    while grille_feu(i,j)==feu
+        i=i-1
+        j=j-1
+    end
+end
+distance_nord_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+vitesse_feu_nord_ouest=distance_nord_ouest/temps
+mat_vitesses(1,1)=vitesse_feu_nord_ouest
+
+// Nord-Est
+i=ligne_feu
+j=colonne_feu
+i=i-1
+j=j+1
+while grille_feu(i,j)==vieux_feu
+    i=i-1
+    j=j+1
+    while grille_feu(i,j)==feu
+        i=i-1
+        j=j+1
+    end
+end
+distance_nord_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+vitesse_feu_nord_est=distance_nord_est/temps
+mat_vitesses(1,3)=vitesse_feu_nord_est
+
+// Sud-Est
+i=ligne_feu
+j=colonne_feu
+i=i+1
+j=j+1
+while grille_feu(i,j)==vieux_feu
+    i=i+1
+    j=j+1
+    while grille_feu(i,j)==feu
+        i=i+1
+        j=j+1
+    end
+end
+distance_sud_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+vitesse_feu_sud_est=distance_sud_est/temps
+mat_vitesses(3,3)=vitesse_feu_sud_est
+
+// Sud-Ouest
+i=ligne_feu
+j=colonne_feu
+i=i+1
+j=j-1
+while grille_feu(i,j)==vieux_feu
+    i=i+1
+    j=j-1
+    while grille_feu(i,j)==feu
+        i=i+1
+        j=j-1
+    end
+end
+distance_sud_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+vitesse_feu_sud_ouest=distance_sud_ouest/temps
+mat_vitesses(3,1)=vitesse_feu_sud_ouest
+
+mat_vitesses(2,2)=0
+mprintf("Matrice des vitesses du feu pour chaque direction (point cardinal) en mètre par génération.")
+disp(mat_vitesses)
