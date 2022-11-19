@@ -1,31 +1,35 @@
-clc // permet de rafraichir l'écran
-clear // permet d'effacer les anciennes variables
+////Projet de modélisation d'un feu de Forêt - Chloé CHAUFOURIER et Léon KOENIG - Université PARIS-SACLAY////
 
-// Association couleurs aux entités
+clc // on rafraichit l'écran
+clear //efface les anciennes variables
+
+//Définition de couleurs pour chaque entité
 eau=color(0,128,255), feu=color(250,0,0), urbain_dense=color(160,160,160), urbain_diffu=color(192,192,192), pelouse=color(178,255,102), foret_feuillus=color(128,255,0), foret_coniferes=color(76,153,0), landes_ligneuses=color(102,204,0), zone_indus_commer=color(96,96,96), surf_minerale=color(166,105,0), plages_dunes=color(255,255,51), prairie=color(204,255,153), vignes=color(153,0,153),vieux_feu=color(190,0,0), brique=color(100,100,100)
 
-// Définition des probabilités de combustion de chaque type de case, en %
+//Définition des probabilités de combustion de chaque type de case (en %)
 combu_pelouse=50, combu_foret_feuillus=50, combu_foret_coniferes=60, combu_landes_ligneuses=75, combu_prairie=65, combu_vignes=10
 
-// Définition des intensités de combustion pour chaque type de case 
+//Définition des intensités de combustion pour chaque type de case (en %)
 int_pelouse=20, int_foret_feuillus=75, int_foret_coniferes=90, int_landes_ligneuses=60, int_prairie=35, int_vignes=5
 
-// Création des grilles et modification des couleurs
-occupsol=read("occup_asc.txt",286,508)
-grille_alt=read('alt_asc.txt',286,508)
+//Ouverture des matrices de la zone étudiée
+occupsol=read("occup_asc.txt",286,508)  //matrice d'occupation du sol
+grille_alt=read('alt_asc.txt',286,508)  //matrice des altitudes
 
+//Création de la grille/matrice des facteurs du vent
 for i=1:3
     for j=1:3
         grille_fact_vent=0
     end
 end
 
-for i=1:286     // nb de lignes
-    for j=1:508     // nb de colonnes
-        grille_time(i,j)=0      // on crée aussi une grille pour le temps
+//Création de matrices et association des couleurs aux types de cases
+for i=1:286     //i=nb de lignes
+    for j=1:508     //j=nb de colonnes
+        grille_time(i,j)=0  //création grille pour le temps qui permettra de suivre l'"âge" d'une case en feu
         if occupsol(i,j)==31
-            grille(i,j)=foret_feuillus
-            grille_intensite(i,j)=int_foret_feuillus
+            grille(i,j)=foret_feuillus  //association aux couleurs souhaitées
+            grille_intensite(i,j)=int_foret_feuillus    //création d'une matrice avec les intensités de combustion en fonction du type de case
         end
         if occupsol(i,j)==32
             grille(i,j)=foret_coniferes
@@ -40,7 +44,7 @@ for i=1:286     // nb de lignes
             grille_intensite(i,j)=int_landes_ligneuses
         end
         if occupsol(i,j)==41
-            grille(i,j)=urbain_dense
+            grille(i,j)=urbain_dense    //pas d'intensité car ne brûle pas
         end
         if occupsol(i,j)==42
             grille(i,j)=urbain_diffu
@@ -68,50 +72,48 @@ for i=1:286     // nb de lignes
     end
 end
 
-// Début d'incencdie aléatoire 
-grille_feu=grille
-ligne_feu=143//sample(1,20:280)
-colonne_feu=254//sample(1,20:500)
+//DEFINITION ORIGINE INCENDIE
+grille_feu=grille   //grille sur laquelle on va travailler
+ligne_feu=143   //si on veut une ligne aléatoire alors: sample(1,20:280)
+colonne_feu=254 //si on veut une colonne aléatoire alors: sample(1,20:500)
 grille_feu(ligne_feu,colonne_feu)=feu
 mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_feu, colonne_feu)
 
 
-// Paramètres de la modélisation 
-temps=50   // On détermine un nombre de temps pour la modélisation
-dir_vent="Est" // Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest"
-humidite=70 // en %
-fact_humid=1-(humidite/100)  // facteur d'humidité
-vitesse_vent=20  // en km/h
-fact_vent=1+(vitesse_vent/100)
-vent_pos=1.5*fact_vent
-vent_neg=0.01*fact_vent
-vent_neut=0.8*fact_vent
-nb_cases_feu=0
+//DEFINITION PARAMETRES MODELISATION
+temps=200   //On détermine un nombre de générations/temps de modélisation
+dir_vent="Est" //Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest" et "Pas_de_vent"
+humidite=70 //en %
+fact_humid=1-(humidite/100)  //facteur de multiplication de l'humidité sur toute la carte
+vitesse_vent=20  //en km/h
+eff_vit_vent=1+(vitesse_vent/100)  //facteur assoié à la vitesse du vent
+vent_pos=1.5*eff_vit_vent  //facteur quand dans le sens du vent
+vent_neg=0.01*eff_vit_vent  //facteur contre le vent
+vent_neut=0.8*eff_vit_vent  //facteur sur les côtés
 
-filename = fullfile(pwd(), "test.csv")  // où on stocke les matrices
-
-// Grilles du vent
+//GRILLES DU VENT
+//Direction du vent = d'où vient le vent, opposé au sens de déplacement de l'air!
 if dir_vent=="Ouest"
     for a=1:3
-        grille_fact_vent(a,1)=vent_neg // colonne 1
+        grille_fact_vent(a,1)=vent_neg //colonne 1
     end
     for a=1:3
-        grille_fact_vent(a,2)=vent_neut // colonne 2
+        grille_fact_vent(a,2)=vent_neut //colonne 2
     end
     for a=1:3
-        grille_fact_vent(a,3)=vent_pos // colonne 3
+        grille_fact_vent(a,3)=vent_pos //colonne 3
     end
 end
 
 if dir_vent=="Est"
     for a=1:3
-        grille_fact_vent(a,1)=vent_pos
+        grille_fact_vent(a,1)=vent_pos  //colonne 1
     end
     for a=1:3
-        grille_fact_vent(a,2)=vent_neut
+        grille_fact_vent(a,2)=vent_neut //colonne 2
     end
     for a=1:3
-        grille_fact_vent(a,3)=vent_neg
+        grille_fact_vent(a,3)=vent_neg  //colonne 3
     end
 end
 
@@ -143,36 +145,35 @@ end
 if dir_vent=="Pas_de_vent"
     for a=1:3
         for b=1:3
-            grille_fact_vent(a,b)=1
+            grille_fact_vent(a,b)=1 //facteur de 1 = pas de changement de la proba
         end
     end
 end
 
-//Début de la modélisation
+//MODELISATION
 for t=1:temps
-    tic()
-    grille_temp=grille_feu
-    for i=3:(286-2)    // On commence à la ligne 2 et on arrête à l'avant dernière
-        for j=3:(508-2)    // On commence à la colonne 2 et on arrête à l'avant dernière 
-            // Règles : 
-            if grille_feu(i,j)==feu   // Si feu sur la case alors
+    tic()   //permet d'avoir le temps de calcul de la boucle
+    grille_temp=grille_feu  //grille temporaire pour faire les modifications
+    for i=3:(286-2)    //début ligne 2 fin à l'avant dernière car au delà on regarderait en dehors de la matrice
+        for j=3:(508-2)    //début colonne 2 et fin à l'avant dernière 
+            if grille_feu(i,j)==feu
                 grille_time(i,j)=grille_time(i,j)+1
-                if grille_time(i,j)==50     // large pour être sûr qu'il a eu le temps de tout bruler autour
-                    grille_temp(i,j)=vieux_feu
+                if grille_time(i,j)==50     // large pour être sûr que le feu a eu le temps de tout bruler autour
+                    grille_temp(i,j)=vieux_feu  //évitera de faire les calculs sur ces cases (optimisation)
                 else
-                    for y=(i-1):(i+1)
-                        a=(y-i+2)   // pour explorer la grille du vent
+                    for y=(i-1):(i+1)   //regarde chaque case autour de la case en feu (8 cases)
+                        a=(y-i+2)   //pour explorer la grille du vent
                         for x=(j-1):(j+1)
                             b=(x-j+2)
-                            fact_intensite=(1+(sum(grille_intensite(y-1:y+1,x-1:x+1)))/1800)
-                            delta_alt=(grille_alt(y,x))-(grille_alt(i,j))
-                            if delta_alt<=0
-                                fact_alt=1-delta_alt*0.01
-                            else
-                                fact_alt=delta_alt*0.01
+                            fact_intensite=(1+(sum(grille_intensite(y-1:y+1,x-1:x+1)))/1800)  //facteur d'intensité en fonction de l'intensité de combustion tout autour de la case, divisé par 1800 pour avoir un facteur cohérent
+                            delta_alt=(grille_alt(y,x))-(grille_alt(i,j))  //différence d'altitude entre la case et case en feu
+                            if delta_alt<=0 //si case est plus basse que la case en feu
+                                fact_alt=1-delta_alt*0.01   //facteur d'altitude <1 donc réduit la proba de feu
+                            else    //quand case est plus haute que la case en feu
+                                fact_alt=delta_alt*0.01 //facteur >1 donc proba de feu augmente
                             end
-                            if grille_feu(y,x)==pelouse // si case = pelouse
-                                if sample(1,0:100)<(combu_pelouse*fact_humid*grille_fact_vent(a,b)*fact_intensite*fact_alt)
+                            if grille_feu(y,x)==pelouse //si case = pelouse
+                                if sample(1,0:100)<(combu_pelouse*fact_humid*grille_fact_vent(a,b)*fact_intensite*fact_alt) //on multiplie la proba de combustion de base par l'ensemble des facteurs
                                     grille_temp(y,x)=feu
                                 else
                                 end
@@ -214,35 +215,33 @@ for t=1:temps
             end
         end
     end
-    //fprintfMat(filename, grille_temp)
-    Matplot(grille_temp)    // Affichage de la grille
-    grille_feu=grille_temp
-    disp(t)
+    Matplot(grille_temp)    //affichage de la grille temporaire
+    grille_feu=grille_temp  //matrice temporaire sauvegardée
+    disp(t)     //affichage de la génération actuelle
     temps_calc=toc()
-    disp(temps_calc)
+    disp(temps_calc)    //affichage du temps de calcul
 end
 
-grille_feu(ligne_feu,colonne_feu)=color(0,0,0)    // origine du feu d'une autre couleur
-//Matplot(grille_feu)
-mprintf("Le feu a commencé à la ligne %d, colonne %d. \n Origine représentée par une case noire.\n", ligne_feu, colonne_feu)
+grille_feu(ligne_feu,colonne_feu)=color(0,0,0)    //origine du feu d'une autre couleur pour bien l'identifier
+Matplot(grille_feu)
 
 
-///////// CALCUL DE LA VITESSE MOYENNE DU FEU DANS 4 DIRECTIONS ////////
+///////// CALCUL DE LA VITESSE MOYENNE DU FEU DANS TOUTES LES DIRECTIONS ////////
 
 // On cherche la bordure du feu pour chaque point cardinal
 // Est
 i=ligne_feu
 j=colonne_feu
-j=j+1   // on avance d'une case pour éviter la case noire
+j=j+1   //on avance d'une case pour éviter la case noire à l'origine
 while grille_feu(i,j)==vieux_feu
     j=j+1
     while grille_feu(i,j)==feu
         j=j+1
     end
 end
-distance_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20 // calcul de la norme du vecteur origine-point cardinal pour avoir la distance parcourue par le feu, on multiplie par 20 car c'est la taille d'une case en mètres
-vitesse_feu_est=distance_est/temps  // calcul de la vitesse vers cette direction
-mat_vitesses(2,3)=vitesse_feu_est
+distance_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20 //calcul de la norme du vecteur origine-point cardinal pour avoir la distance parcourue par le feu, on multiplie par 20 car c'est la taille d'une case en mètres donc distance en mètres
+vitesse_feu_est=distance_est/temps  //calcul de la vitesse vers cette direction (en mètres par génération)
+mat_vitesses(2,3)=vitesse_feu_est   //stockage de la vitesse dans une matrice organisée comme une rose des vents
 
 // Ouest
 i=ligne_feu
@@ -354,6 +353,13 @@ distance_sud_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
 vitesse_feu_sud_ouest=distance_sud_ouest/temps
 mat_vitesses(3,1)=vitesse_feu_sud_ouest
 
-mat_vitesses(2,2)=0
-mprintf("Matrice des vitesses du feu pour chaque direction (point cardinal) en mètre par génération.")
+mat_vitesses(2,2)=0 //zéro au centre de la matrice rose des vents
+
+//AFFICHAGE DES CONDITIONS DE LA MODELISATION ET RESULTATS
+mprintf("Le feu a commencé à la ligne %d, colonne %d. \nOrigine représentée par une case noire.\n", ligne_feu, colonne_feu)
+mprintf("Nombre de générations de la modélisation :  %d\n", temps)
+mprintf("Direction du vent :%s \n",dir_vent)
+mprintf("Humidité : %d pourcents \n",humidite)
+mprintf("Vitesse du vent : %d km/h \n",vitesse_vent)
+mprintf("Matrice des vitesses du feu pour chaque direction (point cardinal) en mètre par génération.\n")
 disp(mat_vitesses)
