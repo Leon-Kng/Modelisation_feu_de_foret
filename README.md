@@ -22,6 +22,8 @@ Formule : proba que la case prenne feu (en %) = facteur de combustion X facteur 
 - Trouver comment stocker les matrices pour ensuite toutes les afficher à la suite sans délai de calcul
 - Faire varier les valeurs de chaque facteur pour calculer la sensibilité et voir si cohérent et noter les calculs
 - Trouver la valeur du temps d'une génération qui permet d'avoir une vitesse de déplacement du feu réaliste (30cm/sec)
+- Filmer des exemples de modélisation en faisant varier les paramètres, les mettre en accéléré et les upload sur mon drive avec un accès par lien qui sera dans le rapport
+
 
 
 <h3> Ce qu'on aurait pu faire : </h3>
