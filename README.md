@@ -13,10 +13,16 @@
 
 
 Concept de base: une proba de combustion pour chaque type de parcelle qui va être impactée par le vent, l'altitude, l'humidité et l'intensité des cases voisines
+Formule : proba que la case prenne feu (en %) = facteur de combustion X facteur d'humidité X facteur vent X facteur intensité de combustion X facteur altitude
 
 <h3> A faire : </h3>
-- Ajouter un système qui calcule la vitesse du feu (compter le nb de pixel qui a brûlé au total ou en plus chaque génération, stocker la valeur dans un vecteur et utiliser cela pour avoir une surface / temps) 
-- Formuler la formule qui permet de donner la proba qu'une case prenne feu
+
+- Trouver comment stocker les matrices pour ensuite toutes les afficher à la suite sans délai de calcul
+- Faire varier les valeurs de chaque facteur pour calculer la sensibilité et voir si cohérent et noter les calculs
+- Trouver la valeur du temps d'une génération qui permet d'avoir une vitesse de déplacement du feu réaliste (30cm/sec)
+
+
+<h3> Ce qu'on aurait pu faire : </h3>
 - Faire changer de direction le vent au cours de la modélisation
 - Faire des scénario où toute la zone est humide ou toute la zone est très sèche et les comparer
 
