@@ -23,6 +23,7 @@ Formule : proba que la case prenne feu (en %) = facteur de combustion X facteur 
 - Faire varier les valeurs de chaque facteur pour calculer la sensibilité et voir si cohérent et noter les calculs
 - Trouver la valeur du temps d'une génération qui permet d'avoir une vitesse de déplacement du feu réaliste (30cm/sec)
 - Filmer des exemples de modélisation en faisant varier les paramètres, les mettre en accéléré et les upload sur mon drive avec un accès par lien qui sera dans le rapport
+- Calcul de la vitesse à chaque temps pour stocker ensuite dans un vecteur et faire un graphique ??
 
 
 
@@ -36,5 +37,7 @@ Formule : proba que la case prenne feu (en %) = facteur de combustion X facteur 
 - On a préféré avoir une modélisation qui donne un résultat "réaliste" que d'ajouter des pompiers qui auraient potentiellement été non réalistes 
 - Faire une formulation du modèle
 - Faire une analyse de sensibilité du modèle (voir CM4 Girondot)
+- Préciser que vitesse de la simulation n'est pas constante à cause du temps de calcul
+
 
 Pas trouvé de coeff sur internet alors à cause de ce manque de donner pour paramétrer notre modèle, on a établi arbitrairement nos probas et facteurs de multiplication
