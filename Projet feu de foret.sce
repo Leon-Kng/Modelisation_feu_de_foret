@@ -81,7 +81,7 @@ mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_feu, colonne_f
 
 
 //DEFINITION PARAMETRES MODELISATION
-temps=200   //On détermine un nombre de générations/temps de modélisation
+temps=10   //On détermine un nombre de générations/temps de modélisation
 dir_vent="Est" //Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest" et "Pas_de_vent"
 humidite=70 //en %
 fact_humid=1-(humidite/100)  //facteur de multiplication de l'humidité sur toute la carte
@@ -354,6 +354,7 @@ vitesse_feu_sud_ouest=distance_sud_ouest/temps
 mat_vitesses(3,1)=vitesse_feu_sud_ouest
 
 mat_vitesses(2,2)=0 //zéro au centre de la matrice rose des vents
+vitesse_moy=(sum(mat_vitesses(1:3,1:3))/8)
 
 //AFFICHAGE DES CONDITIONS DE LA MODELISATION ET RESULTATS
 mprintf("Le feu a commencé à la ligne %d, colonne %d. \nOrigine représentée par une case noire.\n", ligne_feu, colonne_feu)
@@ -363,3 +364,4 @@ mprintf("Humidité : %d pourcents \n",humidite)
 mprintf("Vitesse du vent : %d km/h \n",vitesse_vent)
 mprintf("Matrice des vitesses du feu pour chaque direction (point cardinal) en mètre par génération.\n")
 disp(mat_vitesses)
+mprintf("Vitesse moyenne de propagation du feu : %f mètres par génération.", vitesse_moy)
