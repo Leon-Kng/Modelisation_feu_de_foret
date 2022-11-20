@@ -81,7 +81,7 @@ mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_feu, colonne_f
 
 
 //DEFINITION PARAMETRES MODELISATION
-temps=10   //On détermine un nombre de générations/temps de modélisation
+temps=350   //On détermine un nombre de générations/temps de modélisation
 dir_vent="Est" //Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest" et "Pas_de_vent"
 humidite=70 //en %
 fact_humid=1-(humidite/100)  //facteur de multiplication de l'humidité sur toute la carte
@@ -90,6 +90,7 @@ eff_vit_vent=1+(vitesse_vent/100)  //facteur assoié à la vitesse du vent
 vent_pos=1.5*eff_vit_vent  //facteur quand dans le sens du vent
 vent_neg=0.01*eff_vit_vent  //facteur contre le vent
 vent_neut=0.8*eff_vit_vent  //facteur sur les côtés
+temps_calc_tot=0    // pour avoir le temps de calcul total de la modélisation à la fin (en secondes)
 
 //GRILLES DU VENT
 //Direction du vent = d'où vient le vent, opposé au sens de déplacement de l'air!
@@ -149,6 +150,9 @@ if dir_vent=="Pas_de_vent"
         end
     end
 end
+
+//Stockage de la première matrice dans une liste
+stock_matrices=list(grille_feu)
 
 //MODELISATION
 for t=1:temps
@@ -215,16 +219,16 @@ for t=1:temps
             end
         end
     end
-    Matplot(grille_temp)    //affichage de la grille temporaire
+    //Matplot(grille_temp)    //affichage de la grille temporaire
+    stock_matrices($+1)=grille_temp
     grille_feu=grille_temp  //matrice temporaire sauvegardée
     disp(t)     //affichage de la génération actuelle
     temps_calc=toc()
     disp(temps_calc)    //affichage du temps de calcul
+    temps_calc_tot=temps_calc_tot+temps_calc
 end
 
-grille_feu(ligne_feu,colonne_feu)=color(0,0,0)    //origine du feu d'une autre couleur pour bien l'identifier
-Matplot(grille_feu)
-
+temps_calc_tot_min=temps_calc_tot/60    //convertion en minutes
 
 ///////// CALCUL DE LA VITESSE MOYENNE DU FEU DANS TOUTES LES DIRECTIONS ////////
 
@@ -365,3 +369,18 @@ mprintf("Vitesse du vent : %d km/h \n",vitesse_vent)
 mprintf("Matrice des vitesses du feu pour chaque direction (point cardinal) en mètre par génération.\n")
 disp(mat_vitesses)
 mprintf("Vitesse moyenne de propagation du feu : %f mètres par génération.", vitesse_moy)
+mprintf("Temps de calcul total pour la modélisation : %d secondes soit environ %d minutes.", temps_calc_tot, temps_calc_tot_min)
+
+
+//Affichage de toutes les matrices à la suite pour animer la modélisation (copier-coller cette boucle dans la console pour voir à nouveau la propagation du feu)
+for i=1:(temps+1)
+    x=0
+    while x<2
+        Matplot(stock_matrices(i))
+        x=x+1
+    end
+end
+
+//origine du feu d'une autre couleur pour bien l'identifier
+grille_feu(ligne_feu,colonne_feu)=color(0,0,0)    
+Matplot(grille_feu)
