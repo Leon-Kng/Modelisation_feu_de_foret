@@ -229,6 +229,8 @@ for t=1:temps
 end
 
 temps_calc_tot_min=temps_calc_tot/60    //convertion en minutes
+temps_IRL_sec=temps*3.6 //durée réelle de la simulation
+temps_IRL_min=temps_IRL_sec/60  //convertion en minutes
 
 ///////// CALCUL DE LA VITESSE MOYENNE DU FEU DANS TOUTES LES DIRECTIONS ////////
 
@@ -363,6 +365,7 @@ vitesse_moy=(sum(mat_vitesses(1:3,1:3))/8)
 //AFFICHAGE DES CONDITIONS DE LA MODELISATION ET RESULTATS
 mprintf("Le feu a commencé à la ligne %d, colonne %d. \nOrigine représentée par une case noire.\n", ligne_feu, colonne_feu)
 mprintf("Nombre de générations de la modélisation :  %d\n", temps)
+mprintf("Durée réelle de la simulation : %d secondes soit %d minutes",temps_IRL_sec, temps_IRL_min)
 mprintf("Direction du vent :%s \n",dir_vent)
 mprintf("Humidité : %d pourcents \n",humidite)
 mprintf("Vitesse du vent : %d km/h \n",vitesse_vent)
