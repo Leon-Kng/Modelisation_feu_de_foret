@@ -304,7 +304,7 @@ while grille_feu(i,j)==vieux_feu
         j=j-1
     end
 end
-distance_nord_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+distance_nord_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*sqrt((20^2)+(20^2))   //car diagonale d'une case est différente des côtés
 vitesse_feu_nord_ouest=distance_nord_ouest/(temps*3.6)
 mat_vitesses(1,1)=vitesse_feu_nord_ouest
 
@@ -321,7 +321,7 @@ while grille_feu(i,j)==vieux_feu
         j=j+1
     end
 end
-distance_nord_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+distance_nord_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*sqrt((20^2)+(20^2))
 vitesse_feu_nord_est=distance_nord_est/(temps*3.6)
 mat_vitesses(1,3)=vitesse_feu_nord_est
 
@@ -338,7 +338,7 @@ while grille_feu(i,j)==vieux_feu
         j=j+1
     end
 end
-distance_sud_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+distance_sud_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*sqrt((20^2)+(20^2))
 vitesse_feu_sud_est=distance_sud_est/(temps*3.6)
 mat_vitesses(3,3)=vitesse_feu_sud_est
 
@@ -355,7 +355,7 @@ while grille_feu(i,j)==vieux_feu
         j=j-1
     end
 end
-distance_sud_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
+distance_sud_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*sqrt((20^2)+(20^2))
 vitesse_feu_sud_ouest=distance_sud_ouest/(temps*3.6)
 mat_vitesses(3,1)=vitesse_feu_sud_ouest
 
