@@ -15,6 +15,7 @@
 
 
 Concept de base: une proba de combustion pour chaque type de parcelle qui va être impactée par le vent, l'altitude, l'humidité et l'intensité des cases voisines
+
 Formule : proba que la case prenne feu (en %) = facteur de combustion X facteur d'humidité X facteur vent X facteur intensité de combustion X facteur altitude
 
 <h3> A faire : </h3>
@@ -30,9 +31,6 @@ Formule : proba que la case prenne feu (en %) = facteur de combustion X facteur 
 <h3>Rapport : </h3> 
 
 - On a préféré avoir une modélisation qui donne un résultat "réaliste" que d'ajouter des pompiers qui auraient potentiellement été non réalistes 
-- Faire une formulation du modèle
-- Faire une analyse de sensibilité du modèle (voir CM4 Girondot)
-- Préciser que vitesse de la simulation n'est pas constante à cause du temps de calcul
 
 
-Pas trouvé de coeff sur internet alors à cause de ce manque de donner pour paramétrer notre modèle, on a établi arbitrairement nos probas et facteurs de multiplication
+Pas trouvé de coeff sur internet alors à cause de ce manque de données pour paramétrer notre modèle, on a établi arbitrairement nos probas et facteurs de multiplication
