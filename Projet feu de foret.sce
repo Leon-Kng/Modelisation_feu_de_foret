@@ -172,9 +172,9 @@ for t=1:temps
                             fact_intensite=(1+(sum(grille_intensite(y-1:y+1,x-1:x+1)))/1800)  //facteur d'intensité en fonction de l'intensité de combustion tout autour de la case, divisé par 1800 pour avoir un facteur cohérent
                             delta_alt=(grille_alt(y,x))-(grille_alt(i,j))  //différence d'altitude entre la case et case en feu
                             if delta_alt<=0 //si case est plus basse que la case en feu
-                                fact_alt=1-delta_alt*0.01   //facteur d'altitude <1 donc réduit la proba de feu
+                                fact_alt=1+delta_alt*0.01   //facteur d'altitude <1 donc réduit la proba de feu
                             else    //quand case est plus haute que la case en feu
-                                fact_alt=delta_alt*0.01 //facteur >1 donc proba de feu augmente
+                                fact_alt=1+delta_alt*0.01 //facteur >1 donc proba de feu augmente
                             end
                             if grille_feu(y,x)==pelouse //si case = pelouse
                                 if sample(1,0:100)<(combu_pelouse*fact_humid*grille_fact_vent(a,b)*fact_intensite*fact_alt) //on multiplie la proba de combustion de base par l'ensemble des facteurs
