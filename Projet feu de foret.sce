@@ -7,7 +7,7 @@ clear //efface les anciennes variables
 eau=color(0,128,255), feu=color(250,0,0), urbain_dense=color(160,160,160), urbain_diffu=color(192,192,192), pelouse=color(178,255,102), foret_feuillus=color(128,255,0), foret_coniferes=color(76,153,0), landes_ligneuses=color(102,204,0), zone_indus_commer=color(96,96,96), surf_minerale=color(166,105,0), plages_dunes=color(255,255,51), prairie=color(204,255,153), vignes=color(153,0,153),vieux_feu=color(190,0,0), brique=color(100,100,100)
 
 //Définition des probabilités de combustion de chaque type de case (en %)
-combu_pelouse=50, combu_foret_feuillus=50, combu_foret_coniferes=60, combu_landes_ligneuses=75, combu_prairie=65, combu_vignes=10
+combu_pelouse=50/2, combu_foret_feuillus=50/2, combu_foret_coniferes=60/2, combu_landes_ligneuses=75/2, combu_prairie=65/2, combu_vignes=10/2
 
 //Définition des intensités de combustion pour chaque type de case (en %)
 int_pelouse=20, int_foret_feuillus=75, int_foret_coniferes=90, int_landes_ligneuses=60, int_prairie=35, int_vignes=5
@@ -82,12 +82,12 @@ mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_feu, colonne_f
 
 //DEFINITION PARAMETRES MODELISATION
 temps=150   //On détermine un nombre de générations/temps de modélisation
-dir_vent="Est" //Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest" et "Pas_de_vent"
-humidite=50 //en %
+dir_vent="Nord" //Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest" et "Pas_de_vent"
+humidite=70 //en %
 fact_humid=1-(humidite/100)  //facteur de multiplication de l'humidité sur toute la carte
-vitesse_vent=15  //en km/h
-eff_vit_vent=1+(vitesse_vent/100)  //facteur assoié à la vitesse du vent
-vent_pos=1.5*eff_vit_vent  //facteur quand dans le sens du vent
+vitesse_vent=10  //en km/h
+eff_vit_vent=1+(vitesse_vent/250)  //facteur assoié à la vitesse du vent
+vent_pos=1.2*eff_vit_vent  //facteur quand dans le sens du vent
 vent_neg=0.01*eff_vit_vent  //facteur contre le vent
 vent_neut=0.8*eff_vit_vent  //facteur sur les côtés
 temps_calc_tot=0    // pour avoir le temps de calcul total de la modélisation à la fin (en secondes)
@@ -169,7 +169,7 @@ for t=1:temps
                         a=(y-i+2)   //pour explorer la grille du vent
                         for x=(j-1):(j+1)
                             b=(x-j+2)
-                            fact_intensite=(1+(sum(grille_intensite(y-1:y+1,x-1:x+1)))/1800)  //facteur d'intensité en fonction de l'intensité de combustion tout autour de la case, divisé par 1800 pour avoir un facteur cohérent
+                            fact_intensite=(1+(sum(grille_intensite(y-1:y+1,x-1:x+1)))/3000)  //facteur d'intensité en fonction de l'intensité de combustion tout autour de la case, divisé par 1800 pour avoir un facteur cohérent
                             delta_alt=(grille_alt(y,x))-(grille_alt(i,j))  //différence d'altitude entre la case et case en feu
                             if delta_alt<=0 //si case est plus basse que la case en feu
                                 fact_alt=1+delta_alt*0.01   //facteur d'altitude <1 donc réduit la proba de feu
