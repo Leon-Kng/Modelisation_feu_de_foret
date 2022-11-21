@@ -26,7 +26,7 @@ Formule : proba que la case prenne feu (en %) = facteur de combustion X facteur 
 <h3> Ce qu'on aurait pu faire : </h3>
 
 - Faire changer de direction le vent au cours de la modélisation
-- Faire des scénario où toute la zone est humide ou toute la zone est très sèche et les comparer
+- Faire varier la vitesse du vent au cours de la modélisation
 
 <h3>Rapport : </h3> 
 
