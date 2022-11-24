@@ -83,9 +83,9 @@ mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_feu, colonne_f
 //DEFINITION PARAMETRES MODELISATION
 temps=150   //On détermine un nombre de générations/temps de modélisation
 dir_vent="Ouest" //Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest" et "Pas_de_vent"
-humidite=10 //en %
+humidite=50 //en %
 fact_humid=1-(humidite/100)  //facteur de multiplication de l'humidité sur toute la carte
-vitesse_vent=50  //en km/h
+vitesse_vent=10  //en km/h
 eff_vit_vent=1+(vitesse_vent/100)  //facteur assoié à la vitesse du vent
 vent_pos=1.2*eff_vit_vent  //facteur quand dans le sens du vent
 vent_neg=0.01*eff_vit_vent  //facteur contre le vent
