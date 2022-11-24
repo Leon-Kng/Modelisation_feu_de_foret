@@ -7,7 +7,7 @@ clear //efface les anciennes variables
 eau=color(0,128,255), feu=color(250,0,0), urbain_dense=color(160,160,160), urbain_diffu=color(192,192,192), pelouse=color(178,255,102), foret_feuillus=color(128,255,0), foret_coniferes=color(76,153,0), landes_ligneuses=color(102,204,0), zone_indus_commer=color(96,96,96), surf_minerale=color(166,105,0), plages_dunes=color(255,255,51), prairie=color(204,255,153), vignes=color(153,0,153),vieux_feu=color(190,0,0), brique=color(100,100,100)
 
 //Définition des probabilités de combustion de chaque type de case (en %)
-combu_pelouse=50/3, combu_foret_feuillus=50/3, combu_foret_coniferes=60/3, combu_landes_ligneuses=75/3, combu_prairie=65/3, combu_vignes=10/2
+combu_pelouse=50/3, combu_foret_feuillus=50/3, combu_foret_coniferes=60/3, combu_landes_ligneuses=75/3, combu_prairie=65/3, combu_vignes=10/3
 
 //Définition des intensités de combustion pour chaque type de case (en %)
 int_pelouse=20, int_foret_feuillus=75, int_foret_coniferes=90, int_landes_ligneuses=60, int_prairie=35, int_vignes=5
