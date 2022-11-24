@@ -7,7 +7,7 @@ clear //efface les anciennes variables
 eau=color(0,128,255), feu=color(250,0,0), urbain_dense=color(160,160,160), urbain_diffu=color(192,192,192), pelouse=color(178,255,102), foret_feuillus=color(128,255,0), foret_coniferes=color(76,153,0), landes_ligneuses=color(102,204,0), zone_indus_commer=color(96,96,96), surf_minerale=color(166,105,0), plages_dunes=color(255,255,51), prairie=color(204,255,153), vignes=color(153,0,153),vieux_feu=color(190,0,0), brique=color(100,100,100)
 
 //Définition des probabilités de combustion de chaque type de case (en %)
-combu_pelouse=50/2, combu_foret_feuillus=50/2, combu_foret_coniferes=60/2, combu_landes_ligneuses=75/2, combu_prairie=65/2, combu_vignes=10/2
+combu_pelouse=50/3, combu_foret_feuillus=50/3, combu_foret_coniferes=60/3, combu_landes_ligneuses=75/3, combu_prairie=65/3, combu_vignes=10/2
 
 //Définition des intensités de combustion pour chaque type de case (en %)
 int_pelouse=20, int_foret_feuillus=75, int_foret_coniferes=90, int_landes_ligneuses=60, int_prairie=35, int_vignes=5
@@ -82,11 +82,11 @@ mprintf("Le feu a commencé à la ligne %d, colonne %d \n", ligne_feu, colonne_f
 
 //DEFINITION PARAMETRES MODELISATION
 temps=150   //On détermine un nombre de générations/temps de modélisation
-dir_vent="Nord" //Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest" et "Pas_de_vent"
-humidite=70 //en %
+dir_vent="Ouest" //Peut prendre les valeurs "Sud", "Nord", "Est", "Ouest" et "Pas_de_vent"
+humidite=10 //en %
 fact_humid=1-(humidite/100)  //facteur de multiplication de l'humidité sur toute la carte
-vitesse_vent=10  //en km/h
-eff_vit_vent=1+(vitesse_vent/250)  //facteur assoié à la vitesse du vent
+vitesse_vent=90  //en km/h
+eff_vit_vent=1+(vitesse_vent/100)  //facteur assoié à la vitesse du vent
 vent_pos=1.2*eff_vit_vent  //facteur quand dans le sens du vent
 vent_neg=0.01*eff_vit_vent  //facteur contre le vent
 vent_neut=0.8*eff_vit_vent  //facteur sur les côtés
@@ -229,7 +229,7 @@ for t=1:temps
 end
 
 temps_calc_tot_min=temps_calc_tot/60    //convertion en minutes
-temps_IRL_sec=temps*3.6 //durée réelle de la simulation
+temps_IRL_sec=temps*100 //durée réelle de la simulation en secondes
 temps_IRL_min=temps_IRL_sec/60  //convertion en minutes
 
 ///////// CALCUL DE LA VITESSE MOYENNE DU FEU DANS TOUTES LES DIRECTIONS ////////
@@ -246,7 +246,7 @@ while grille_feu(i,j)==vieux_feu
     end
 end
 distance_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20 //calcul de la norme du vecteur origine-point cardinal pour avoir la distance parcourue par le feu, on multiplie par 20 car c'est la taille d'une case en mètres donc distance en mètres
-vitesse_feu_est=distance_est/(temps*3.6)  //calcul de la vitesse vers cette direction (en mètres par secondes), *3.6 car une génération =3.6 secondes
+vitesse_feu_est=distance_est/(temps_IRL_sec)  //calcul de la vitesse vers cette direction (en mètres par secondes), *3.6 car une génération =3.6 secondes
 mat_vitesses(2,3)=vitesse_feu_est   //stockage de la vitesse dans une matrice organisée comme une rose des vents
 
 // Ouest
@@ -260,7 +260,7 @@ while grille_feu(i,j)==vieux_feu
     end
 end
 distance_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
-vitesse_feu_ouest=distance_ouest/(temps*3.6)
+vitesse_feu_ouest=distance_ouest/(temps_IRL_sec)
 mat_vitesses(2,1)=vitesse_feu_ouest
 
 // Sud
@@ -274,7 +274,7 @@ while grille_feu(i,j)==vieux_feu
     end
 end
 distance_sud=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
-vitesse_feu_sud=distance_sud/(temps*3.6)
+vitesse_feu_sud=distance_sud/(temps_IRL_sec)
 mat_vitesses(3,2)=vitesse_feu_sud
 
 // Nord
@@ -288,7 +288,7 @@ while grille_feu(i,j)==vieux_feu
     end
 end
 distance_nord=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*20
-vitesse_feu_nord=distance_nord/(temps*3.6)
+vitesse_feu_nord=distance_nord/(temps_IRL_sec)
 mat_vitesses(1,2)=vitesse_feu_nord
 
 // Nord-Ouest
@@ -305,7 +305,7 @@ while grille_feu(i,j)==vieux_feu
     end
 end
 distance_nord_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*sqrt((20^2)+(20^2))   //car diagonale d'une case est différente des côtés
-vitesse_feu_nord_ouest=distance_nord_ouest/(temps*3.6)
+vitesse_feu_nord_ouest=distance_nord_ouest/(temps_IRL_sec)
 mat_vitesses(1,1)=vitesse_feu_nord_ouest
 
 // Nord-Est
@@ -322,7 +322,7 @@ while grille_feu(i,j)==vieux_feu
     end
 end
 distance_nord_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*sqrt((20^2)+(20^2))
-vitesse_feu_nord_est=distance_nord_est/(temps*3.6)
+vitesse_feu_nord_est=distance_nord_est/(temps_IRL_sec)
 mat_vitesses(1,3)=vitesse_feu_nord_est
 
 // Sud-Est
@@ -339,7 +339,7 @@ while grille_feu(i,j)==vieux_feu
     end
 end
 distance_sud_est=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*sqrt((20^2)+(20^2))
-vitesse_feu_sud_est=distance_sud_est/(temps*3.6)
+vitesse_feu_sud_est=distance_sud_est/(temps_IRL_sec)
 mat_vitesses(3,3)=vitesse_feu_sud_est
 
 // Sud-Ouest
@@ -356,13 +356,15 @@ while grille_feu(i,j)==vieux_feu
     end
 end
 distance_sud_ouest=(sqrt(((i-ligne_feu)^2)+((j-colonne_feu)^2)))*sqrt((20^2)+(20^2))
-vitesse_feu_sud_ouest=distance_sud_ouest/(temps*3.6)
+vitesse_feu_sud_ouest=distance_sud_ouest/(temps_IRL_sec)
 mat_vitesses(3,1)=vitesse_feu_sud_ouest
 
 mat_vitesses(2,2)=0 //zéro au centre de la matrice rose des vents
-mat_vitesses_kmh=mat_vitesses*3600/1000
+mat_vitesses_kmh=mat_vitesses*3.6
+mat_vitesse_cm=mat_vitesses*100
 vitesse_moy_ms=(sum(mat_vitesses(1:3,1:3))/8)
 vitesse_moy_kmh=vitesse_moy_ms*3600/1000 //convertion en km/h
+vitesse_moy_cm=vitesse_moy_ms*100
 
 //AFFICHAGE DES CONDITIONS DE LA MODELISATION ET RESULTATS
 mprintf("Le feu a commencé à la ligne %d, colonne %d. \nOrigine représentée par une case noire.\n", ligne_feu, colonne_feu)
@@ -371,18 +373,18 @@ mprintf("Durée réelle de la simulation : %d secondes soit %d minutes.\n",temps
 mprintf("Direction du vent :%s \n",dir_vent)
 mprintf("Humidité : %d pourcents \n",humidite)
 mprintf("Vitesse du vent : %d km/h \n",vitesse_vent)
-mprintf("Matrice des vitesses du feu pour chaque direction (point cardinal) en mètre par seconde :\n")
-disp(mat_vitesses)
+mprintf("Matrice des vitesses du feu pour chaque direction (point cardinal) en centimètres par seconde :\n")
+disp(mat_vitesse_cm)
 mprintf("Matrice des vitesses du feu pour chaque direction (point cardinal) en kilomètres par heure :\n")
 disp(mat_vitesses_kmh)
-mprintf("Vitesse moyenne de propagation du feu : %f mètres par secondes soit %d kilomètres par heure. \n", vitesse_moy_ms, vitesse_moy_kmh)
+mprintf("Vitesse moyenne de propagation du feu : %f mètres par secondes soit %f kilomètres par heure. \n", vitesse_moy_cm, vitesse_moy_kmh)
 mprintf("Temps de calcul total pour la modélisation : %d secondes soit environ %d minutes.\n", temps_calc_tot, temps_calc_tot_min)
 
 
 //Affichage de toutes les matrices à la suite pour animer la modélisation (copier-coller cette boucle dans la console pour voir à nouveau la propagation du feu)
 for i=1:(temps+1)
     x=0
-    while x<2
+    while x<2   // augmenter ce nombre pour ralentir la visualisation finale de la modélisation
         Matplot(stock_matrices(i))
         x=x+1
     end
